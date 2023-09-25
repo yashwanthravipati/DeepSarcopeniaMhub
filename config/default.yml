@@ -1,0 +1,36 @@
+general:
+  data_base_dir: /app/data
+  version: 1.0
+  description: "Default configuration for DeepSarcopenia (dicom in, dicom out)"
+
+execute:
+- DicomImporter
+- NrrdConverter
+- DeepSarcopeniaRunner
+- DsegConverter
+- DataOrganizer
+
+modules:
+  DicomImporter:
+    source_dir: input_data
+    import_dir: sorted_data
+    sort_data: True
+    meta: 
+      mod: ct
+
+  DeepSarcopeniaRunner:
+    import_dir: sorted_data
+    preprocessed_dir: preprocessed_data
+    outout_dir: output_data
+    
+    sort_data: True
+    
+  DsegConverter:
+    model_name: DeepSarcopenia
+    body_part_examined: HN
+    source_segs: [nrrd:mod=seg:roi=*]
+    skip_empty_slices: True
+  
+  DataOrganizer:
+    targets:
+    - dicomseg:mod=seg-->[i:sid]/DeepSarcopenia.seg.dcm
