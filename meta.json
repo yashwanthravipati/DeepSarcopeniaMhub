@@ -1,0 +1,71 @@
+{
+    "id": "",
+    "name": "DeepSarcopenia",
+    "title": "DeepSarcopenia",
+    "summary": {
+        "description": "DeepSarcopenia is an AI-based pipeline for the automated C3 Skeletal Musclle Segmentation in CT to determine Sarcopenia.",
+        "inputs": [ {
+            "label": "Input Image",
+            "description": "The Head Neck CT scan of a patient.",
+            "format": "DICOM",
+            "modality": "CT",
+            "bodypartexamined": "Neck",
+            "slicethickness": "n/a",
+            "non-contrast": true,
+            "contrast": false
+            } ],
+        "outputs": [ {
+            "type": "Segmentation",
+            "classes": [
+                "MUSCLE",
+                "ADIPOSE"            ]
+            } ],
+        "model": {
+            "architecture":  "DenseNet/U-net",
+            "training": "Supervised",
+            "cmpapproach": "2D"
+        },
+        "data": {
+            "training": {
+                "vol_samples": 231
+            },
+            "evaluation": {
+                "vol_samples": 191
+            },
+            "public": "Partially",
+            "external": true
+        }
+    },
+    "details": {
+        "name": "DeepSarcopenia",
+        "version": "1.0.0",
+        "devteam": "Kannlab (Harvard-AIM)",
+        "type": "DenseNet/U-Net",
+        "date": {
+            "weights": "17/02/20",
+            "code": "07/2023",
+            "pub": "2020"
+        },
+        "cite": "Ye Z, Saraf A, Ravipati Y, et al. Development and Validation of an Automated Image-Based Deep Learning Platform for Sarcopenia Assessment in Head and Neck Cancer. JAMA Netw Open. 2023;6(8):e2328280. doi:10.1001/jamanetworkopen.2023.28280",           "license": {
+            "code": "Apache 2.0",
+            "weights": "Apache 2.0"
+        },
+        "publications": [
+            {
+                "title": "Development and Validation of an Automated Image-Based Deep Learning Platform for Sarcopenia Assessment in Head and Neck Cancer",
+                "uri": "https://jamanetwork.com/journals/jamanetworkopen/article-abstract/2808141"
+            }
+        ],
+        "github": "https://github.com/AIM-KannLab/DeepSarcopenia"
+    },
+    "info": {
+        "use": {
+            "title": "Intended Use",
+            "text": "This model is intended to select the C3 slice and perform muscle segmentation in Head and Neck CT."
+        },
+        "analyses": {
+            "title": "Quantitative Analyses",
+            "text": "The model's performance was assessed using the Dice Coefficient. The complete reporting on these metrics can be found in the publication [1].",
+            
+          }
+}

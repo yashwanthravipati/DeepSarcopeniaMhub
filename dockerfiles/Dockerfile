@@ -5,7 +5,7 @@ FROM mhubai/base:latest
 
 # Clone the main branch of MHubAI/models
 RUN git stash \
- && git sparse-checkout set "models/DeepSarconia" \
+ && git sparse-checkout set "models/DeepSarcopenia" \
  && git fetch https://github.com/MHubAI/models.git main \
  && git merge FETCH_HEAD
 
@@ -17,6 +17,10 @@ RUN git clone https://github.com/AIM-KannLab/DeepSarcopenia /app/models/DeepSarc
 ENV TZ=US/Eastern
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt update && apt install -y tzdata
+
+ENV WEIGHTS_DIR="model/test/"
+ENV WEIGHTS_FOLDER=$WEIGHTS_DIR
+
 
 RUN apt update && \
     apt install --no-install-recommends -y build-essential software-properties-common && \

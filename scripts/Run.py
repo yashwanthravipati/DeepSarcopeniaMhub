@@ -24,6 +24,7 @@ from models.DeepSarcopenia.utils.DeepSarcopeniaRunner import DeepSarcipeniaRunne
 import shutil
 shutil.rmtree("/app/data/sorted_data", ignore_errors=True)
 shutil.rmtree("/app/data/preprocessed_data", ignore_errors=True)
+shutil.rmtree("/app/data/csv", ignore_errors=True)
 shutil.rmtree("/app/tmp", ignore_errors=True)
 shutil.rmtree("/app/data/output_data", ignore_errors=True)
 shutil.rmtree("/app/models/DeepSarcopenia/output", ignore_errors=True)
@@ -40,7 +41,7 @@ DicomImporter(config).execute()
 NrrdConverter(config).execute()
 
 
-# execute model (ct:nifti + heart:nifti -> seg:nifti)
+# execute model (ct:nifti + preprocessed:nifti -> seg:nifti)
 DeepSarcopeniaRunner(config).execute()
 
 # convert (seg:nifti -> seg:dicomseg)
@@ -53,5 +54,8 @@ organizer.set_file_permissions = sys.platform.startswith('linux')
 #organizer.setTarget(DataType(FileType.NIFTI, CT), "/app/data/output_data/[i:SeriesID]/image.nii.gz")
 #organizer.setTarget(DataType(FileType.NIFTI, SEG), "/app/data/output_data/[i:SeriesID]/heart.nii.gz")
 #organizer.setTarget(DataType(FileType.NRRD, SEG), "/app/data/output_data/[i:SeriesID]/[d:roi].nrrd")
-organizer.setTarget(DataType(FileType.DICOMSEG, SEG), "/app/data/output_data/[i:sid]/DeepSarcopenia.dcm")
+# organize data into output folder
+organizer.setTarget(DataType(FileType.NRRD, CT), "/app/data/output_data/[i:sid]/image.nrrd")
+organizer.setTarget(DataType(FileType.NRRD, SEG), "/app/data/output_data/[i:sid]/seg.nrrd")
+organizer.setTarget(DataType(FileType.DICOMSEG, SEG), "/app/data/output_data/[i:sid]/C3Seg.dcm")
 organizer.execute()

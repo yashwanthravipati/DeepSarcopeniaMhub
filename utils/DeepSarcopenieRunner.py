@@ -24,20 +24,20 @@ class DeepSarcopeniaRunner(ModelRunner):
 #    @IO.Output('roi1_lungs', 'roi1_lungs.nii.gz', 'nifti:mod=seg:model=LungMask:roi=RIGHT_LUNG,LEFT_LUNG', bundle='model', the='predicted segmentation of the lungs')
 #    @IO.Output('roi2_lunglobes', 'roi2_lunglobes.nii.gz', 'nifti:mod=seg:model=LungMask:roi=LEFT_UPPER_LUNG_LOBE,LEFT_LOWER_LUNG_LOBE,RIGHT_UPPER_LUNG_LOBE,RIGHT_MIDDLE_LUNG_LOBE,RIGHT_LOWER_LUNG_LOBE', bundle='model', the='predicted segmentation of the lung lobes')
 
-    def task(self, instance: Instance, image: InstanceData, roi1_lungs: InstanceData, roi2_lunglobes: InstanceData) -> None:
+    def task(self, instance: Instance, image: InstanceData, preprocess: InstanceData, csv: InstanceData, segmentation: InstanceData) -> None:
         
 
         # bash command for the C3 Slice Selction *
-        bash_command  = ["DeepSarcoepnia"]
+        bash_command  = ["main.py --SLICE"]
         bash_command += [image.abspath]         # path to the input_file
+        bash_command += ["--slice_model", "test/model/C3_Top_Selection_Model_Weight.hdf5"] # specify lung segmentation model
         bash_command += [csv.abspath]    # path to the output file
-        bash_command += ["--modelname", "C3_Top_Selection_Model"] # specify lung segmentation model
 
         self.v("Running the C3 Selection.")
         self.v(">> run C3 Selection (): ", " ".join(bash_command))
        
         # bash command for the C3 Slice Selction *
-        bash_command  = ["DeepSarcoepnia"]
+        bash_command  = ["main.py --PREPROCESS"]
         bash_command += [image.abspath]         # path to the input_file
         bash_command += [preprocess.abspath]    # path to the output file
         
@@ -48,11 +48,12 @@ class DeepSarcopeniaRunner(ModelRunner):
 
       
         # bash command for the C3 segmentation *
-        bash_command  = ["DeepSarcoepnia"]
+        bash_command  = ["main.py --SEGMENT"]
         bash_command += [image.abspath]         # path to the input_file
+        bash_command += ["--seg_model", "model/test/C3_Top_Segmentation_Model_Weight.hdf5"] # specify lung segmentation model
+        bash_command += [csv.abspath]    # path to the output file
         bash_command += [segmentation.abspath]    # path to the output file
-        bash_command += ["--modelname", "C3_Top_Segmentation_Model"] # specify lung segmentation model
-
+        
         self.v("Running the C3 segmentation.")
         self.v(">> run C3 Segmentation (): ", " ".join(bash_command))
         
